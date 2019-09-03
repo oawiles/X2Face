@@ -16,7 +16,7 @@ To run the notebooks, you need:
 - numpy
 - matplotlib
 
-We tested the demo notebooks in this branch with pytorch 0.4.1, cuda 9.2 and python 2.7.
+We tested the demo notebooks in this branch with pytorch 0.4.1, cuda 9.2 and **python 3.7** .
 You can set up your environment like so:
 
 ```
