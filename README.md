@@ -9,7 +9,7 @@ The demo notebooks demonstrate the following:
 - How to drive with pose in `./UnwrapMosaic/Pose2Face.ipynb`
 - How to drive with audio in `./UnwrapMosiac/Audio2Face.ipynb`
 
-**Update**: We have added updated code and installation instructions to run the demo notebooks with pytorch 0.4.1 in the branch 'pytorch_0.4.1'.
+**Update**: We have added updated code and installation instructions to run the demo notebooks with pytorch 0.4.1 and python 2.7 in the branch 'pytorch_0.4.1' and for pytorch 0.4.1 and python 3.7 in the branch 'py37_pytorch_0.4.1'.
 
 
 To run the notebooks, you need:
