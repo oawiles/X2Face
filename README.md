@@ -9,6 +9,9 @@ The demo notebooks demonstrate the following:
 - How to drive with pose in `./UnwrapMosaic/Pose2Face.ipynb`
 - How to drive with audio in `./UnwrapMosiac/Audio2Face.ipynb`
 
+**Update**: We have added updated code and installation instructions to run the demo notebooks with pytorch 0.4.1 in the branch 'pytorch_0.4.1'.
+
+
 To run the notebooks, you need:
 - pytorch=0.2.0_4 
 - torchvision
@@ -17,6 +20,7 @@ To run the notebooks, you need:
 - matplotlib
 
 It is **important** to use the right version of pytorch, as the defaults for sampling and some other things have changed in more recent versions of pytorch. In these cases, the pretrained models will not work properly.
+
 
 Once the environment is set up, the pre-trained models can be downloaded from the [project page](http://www.robots.ox.ac.uk/~vgg/research/unsup_learn_watch_faces/x2face.html) and the model paths in the notebooks updated appropriately (this should simply require setting the BASE_MODEL_PATH in the notebook to the correct location).
 
