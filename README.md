@@ -10,29 +10,22 @@ The demo notebooks demonstrate the following:
 - How to drive with audio in `./UnwrapMosiac/Audio2Face.ipynb`
 
 To run the notebooks, you need:
-- pytorch=0.2.0_4 
-- torchvision
+- pytorch=0.4.1 
+- torchvision=0.2.1
 - PIL
 - numpy
 - matplotlib
 
-It is **important** to use the right version of pytorch, as the defaults for sampling and some other things have changed in more recent versions of pytorch. In these cases, the pretrained models will not work properly.
+We tested the demo notebooks in this branch with pytorch 0.4.1, cuda 9.2 and python 2.7.
+You can set up your environment like so:
+
+```
+conda install pytorch=0.4.1 cuda92 -c pytorch
+pip install -r requirements.txt
+```
+The pretrained models might not work properly for other versions of pytorch.
 
 Once the environment is set up, the pre-trained models can be downloaded from the [project page](http://www.robots.ox.ac.uk/~vgg/research/unsup_learn_watch_faces/x2face.html) and the model paths in the notebooks updated appropriately (this should simply require setting the BASE_MODEL_PATH in the notebook to the correct location).
 
 
 If you find this useful in your work, please cite the paper appropriately.
-
-<h1>Training</h1>
-
-Training code requires:
-- tensorboardX
-
-To train a model yourself, we have given an example training file using only the photometric loss.
-To run this:
-- Go to the [website](http://www.robots.ox.ac.uk/~vgg/research/unsup_learn_watch_faces/x2face.html)
-- In the data section download the images and training/testing splits
-- Update the paths in ./UnwrapMosaic/VoxCelebData_withmask.py
-- Run the code with `python train_model.py --results_folder $WHERE_TO_SAVE_TENSORBOARD_FILES --model_epoch_path $WHERETOSAVEMODELS`
-
-(Note that this can be run with any version of pytorch -- it is merely important that you train/test with the same version.)

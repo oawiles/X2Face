@@ -228,7 +228,7 @@ class UnetSkipConnectionBlockBetterUpsampler(nn.Module):
         upnorm = norm_layer(outer_nc)
 
         if outermost:
-            upsample = nn.Upsample(scale_factor=2, mode='bilinear')
+            upsample = nn.Upsample(scale_factor=2, mode='bilinear',align_corners=True)
             upconv = nn.Conv2d(inner_nc, outer_nc,
                                         kernel_size=3, stride=1,
                                         padding=1, bias=use_bias)
@@ -237,7 +237,7 @@ class UnetSkipConnectionBlockBetterUpsampler(nn.Module):
             self.up = nn.Sequential(*up)
             self.down = nn.Sequential(*down)
         elif innermost:
-            upsample = nn.Upsample(scale_factor=2, mode='bilinear')
+            upsample = nn.Upsample(scale_factor=2, mode='bilinear',align_corners=True)
             upconv = nn.Conv2d(inner_nc, outer_nc,
                                         kernel_size=3, stride=1,
                                         padding=1, bias=use_bias)
@@ -246,7 +246,7 @@ class UnetSkipConnectionBlockBetterUpsampler(nn.Module):
             self.up = nn.Sequential(*up)
             self.down = nn.Sequential(*down)
         else:
-            upsample = nn.Upsample(scale_factor=2, mode='bilinear')
+            upsample = nn.Upsample(scale_factor=2, mode='bilinear',align_corners=True)
             upconv = nn.Conv2d(inner_nc, outer_nc,
                                         kernel_size=3, stride=1,
                                         padding=1, bias=use_bias)
