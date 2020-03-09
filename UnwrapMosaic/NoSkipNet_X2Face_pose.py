@@ -137,7 +137,10 @@ class Pix2PixModel(nn.Module):
     def __init__(self, input_nc, output_nc, input_pose=False, audio=False, expr=False, inner_nc=512):
         super(Pix2PixModel, self).__init__()
 
-        self.netG = define_G(input_nc, output_nc, input_pose, audio, expr, 64, 'unet_256', 'batch', False, 'xavier', [0], inner_nc=inner_nc)
+        gpu = []
+        if torch.cuda.is_available():
+            gpu = [0]
+        self.netG = define_G(input_nc, output_nc, input_pose, audio, expr, 64, 'unet_256', 'batch', False, 'xavier', gpu, inner_nc=inner_nc)
 
     def forward(self, *cycles):
         # First one

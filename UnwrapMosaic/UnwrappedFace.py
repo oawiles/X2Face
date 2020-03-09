@@ -12,6 +12,8 @@ import numpy as np
 # E.g. the two images go from the given image to a sampler with values between -1,1 
 # denoting the offset from the identity mapping.
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 class UnwrappedFaceWeightedAverage(nn.Module):
 	def __init__(self, output_num_channels=2, input_num_channels=3, inner_nc=512):
 		super(UnwrappedFaceWeightedAverage, self).__init__()
@@ -26,7 +28,7 @@ class UnwrappedFaceWeightedAverage(nn.Module):
 		xs = np.meshgrid(xs, xs)
 		xs = np.stack(xs, 2)
 
-		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_imgs[0].size(0), 1,1,1).cuda()
+		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_imgs[0].size(0), 1,1,1).to(device)
 
 		input_imgs_t = [0] * len(input_imgs)
 		confidence = [0] * len(input_imgs)
@@ -59,8 +61,8 @@ class UnwrappedFaceWeightedAverage(nn.Module):
 
 		sampler_xy = nn.Tanh()(sampler[:,0:2,:,:])
 		#print(confidences.size(), xs.size())
-		stddev = nn.Softplus().cuda()(sampler[:,2:,:,:]).clamp(max=40)
-		sampler_xy = sampler_xy.permute(0,2,3,1) + stddev.permute(0,2,3,1).contiguous().mul(Variable(torch.randn(xs.size()).cuda(), requires_grad=False)) + Variable(xs, requires_grad=False) # choose values according to the std dev
+		stddev = nn.Softplus().to(device)(sampler[:,2:,:,:]).clamp(max=40)
+		sampler_xy = sampler_xy.permute(0,2,3,1) + stddev.permute(0,2,3,1).contiguous().mul(Variable(torch.randn(xs.size()).to(device), requires_grad=False)) + Variable(xs, requires_grad=False) # choose values according to the std dev
 		sampler_xy = sampler_xy.clamp(min=-1,max=1)
 
 		sampled_image = nn.functional.grid_sample(result_xc, sampler_xy)
@@ -70,7 +72,7 @@ class UnwrappedFaceWeightedAverage(nn.Module):
 		xs = np.linspace(-1,1,input_img.size(2))
 		xs = np.meshgrid(xs, xs)
 		xs = np.stack(xs, 2)
-		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_img.size(0), 1,1,1).cuda()
+		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_img.size(0), 1,1,1).to(device)
 
 		temp = self.pix2pixUnwrapped(input_img)[0]
 		sampler = temp[:,0:2,:,:]
@@ -82,7 +84,7 @@ class UnwrappedFaceWeightedAverage(nn.Module):
 		xs = np.linspace(-1,1,input_imgs[0].size(2))
 		xs = np.meshgrid(xs, xs)
 		xs = np.stack(xs, 2)
-		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_imgs[0].size(0), 1,1,1).cuda()
+		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_imgs[0].size(0), 1,1,1).to(device)
 
 		input_imgs_t = [0] * len(input_imgs)
 		confidence = [0] * len(input_imgs)
@@ -110,7 +112,7 @@ class UnwrappedFaceWeightedAverage(nn.Module):
 		xs = np.linspace(-1,1,sampler.size(2))
 		xs = np.meshgrid(xs, xs)
 		xs = np.stack(xs, 2)
-		xs = torch.Tensor(xs).unsqueeze(0).repeat(target_pose.size(0), 1,1,1).cuda()
+		xs = torch.Tensor(xs).unsqueeze(0).repeat(target_pose.size(0), 1,1,1).to(device)
 
 		sampler = sampler.permute(0,2,3,1) + Variable(xs, requires_grad=False)
 		return sampler
@@ -121,14 +123,14 @@ class UnwrappedFaceWeightedAveragePose(nn.Module):
 		super(UnwrappedFaceWeightedAveragePose, self).__init__()
 
 		self.pix2pixUnwrapped = Pix2PixModel(3)
-                self.pix2pixSampler = NoSkipPix2PixModel_pose(input_num_channels, output_num_channels, input_pose=input_pose, inner_nc=inner_nc)
+		self.pix2pixSampler = NoSkipPix2PixModel_pose(input_num_channels, output_num_channels, input_pose=input_pose, inner_nc=inner_nc)
 
 	def forward(self, target_pose, pose_gt, *input_imgs):
 		xs = np.linspace(-1,1,input_imgs[0].size(2))
 		xs = np.meshgrid(xs, xs)
 		xs = np.stack(xs, 2)
 
-		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_imgs[0].size(0), 1,1,1).cuda()
+		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_imgs[0].size(0), 1,1,1).to(device)
 
 		input_imgs_t = [0] * len(input_imgs)
 		confidence = [0] * len(input_imgs)
@@ -161,8 +163,8 @@ class UnwrappedFaceWeightedAveragePose(nn.Module):
 
 		sampler_xy = nn.Tanh()(sampler[:,0:2,:,:])
 		#print(confidences.size(), xs.size())
-		stddev = nn.Softplus().cuda()(sampler[:,2:,:,:]).clamp(max=40)
-		sampler_xy = sampler_xy.permute(0,2,3,1) + stddev.permute(0,2,3,1).contiguous().mul(Variable(torch.randn(xs.size()).cuda(), requires_grad=False)) + Variable(xs, requires_grad=False) # choose values according to the std dev
+		stddev = nn.Softplus().to(device)(sampler[:,2:,:,:]).clamp(max=40)
+		sampler_xy = sampler_xy.permute(0,2,3,1) + stddev.permute(0,2,3,1).contiguous().mul(Variable(torch.randn(xs.size()).to(device), requires_grad=False)) + Variable(xs, requires_grad=False) # choose values according to the std dev
 		sampler_xy = sampler_xy.clamp(min=-1,max=1)
 
 		sampled_image = nn.functional.grid_sample(result_xc, sampler_xy)
@@ -172,7 +174,7 @@ class UnwrappedFaceWeightedAveragePose(nn.Module):
 		xs = np.linspace(-1,1,input_imgs[0].size(2))
 		xs = np.meshgrid(xs, xs)
 		xs = np.stack(xs, 2)
-		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_imgs[0].size(0), 1,1,1).cuda()
+		xs = torch.Tensor(xs).unsqueeze(0).repeat(input_imgs[0].size(0), 1,1,1).to(device)
 
 		input_imgs_t = [0] * len(input_imgs)
 		confidence = [0] * len(input_imgs)
@@ -200,7 +202,7 @@ class UnwrappedFaceWeightedAveragePose(nn.Module):
 		xs = np.linspace(-1,1,sampler.size(2))
 		xs = np.meshgrid(xs, xs)
 		xs = np.stack(xs, 2)
-		xs = torch.Tensor(xs).unsqueeze(0).repeat(target_pose.size(0), 1,1,1).cuda()
+		xs = torch.Tensor(xs).unsqueeze(0).repeat(target_pose.size(0), 1,1,1).to(device)
 
 		sampler = sampler.permute(0,2,3,1) + Variable(xs, requires_grad=False)
 		return sampler
